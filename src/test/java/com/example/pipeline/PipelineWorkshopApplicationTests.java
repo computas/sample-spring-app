@@ -14,7 +14,10 @@ public class PipelineWorkshopApplicationTests {
 
 	@Test
 	public void contextLoads() {
-        Assert.assertTrue("This test fails on purpose", false);
+        String doFail = System.getProperty("pipelineFailOneTest");
+        if ("true".equalsIgnoreCase(doFail)) {
+            Assert.assertTrue("This test fails on purpose", false);
+        }
     }
 
     @Test
