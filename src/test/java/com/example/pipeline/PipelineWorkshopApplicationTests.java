@@ -1,5 +1,6 @@
 package com.example.pipeline;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -13,6 +14,10 @@ public class PipelineWorkshopApplicationTests {
 
 	@Test
 	public void contextLoads() {
-	}
+        Assert.assertTrue("This test fails on purpose", false);
+    }
 
+    @Test
+    public void getNote() {
+    }
 }
