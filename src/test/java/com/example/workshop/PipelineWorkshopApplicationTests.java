@@ -1,4 +1,4 @@
-package com.example.pipeline;
+package com.example.workshop;
 
 import org.junit.Assert;
 import org.junit.Test;
