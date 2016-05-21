@@ -34,15 +34,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 public class PipelineWorkshopApplicationTests {
 
-	@Test
-	public void contextLoads() {
-        String doFail = System.getProperty("pipelineFailOneTest");
-        if ("true".equalsIgnoreCase(doFail)) {
-            Assert.assertTrue("This test fails on purpose", false);
-        }
+  @Test
+  public void contextLoads() {
+    String doFail = System.getProperty("pipelineFailOneTest");
+    if ("true".equalsIgnoreCase(doFail)) {
+      Assert.assertTrue("This test fails on purpose", false);
     }
+  }
 
-    @Test
-    public void getNote() {
-    }
+  @Test
+  public void getNote() {
+  }
 }
