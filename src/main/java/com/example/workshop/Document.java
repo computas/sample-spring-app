@@ -22,27 +22,62 @@
  */
 package com.example.workshop;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.HashMap;
+import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = PipelineWorkshopApplication.class)
-@WebAppConfiguration
-public class PipelineWorkshopApplicationTests {
+@Entity
+public class Document {
+  @Id
+  private String id;
+  @ElementCollection
+  private Map<String, String> context = new HashMap<>();
+  private String content;
 
-  @Test
-  public void failBySystemProperty() {
-    String doFail = System.getProperty("pipelineFailOneTest");
-    if ("true".equalsIgnoreCase(doFail)) {
-      Assert.assertTrue("This test fails on purpose", false);
-    }
+  public String getId() {
+    return id;
   }
 
-  @Test
-  public void getNote() {
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Document document = (Document) o;
+
+    return id.equals(document.id);
+
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }
