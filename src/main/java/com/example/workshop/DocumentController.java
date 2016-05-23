@@ -27,6 +27,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.UUID;
 
 @RestController
@@ -50,12 +52,13 @@ public class DocumentController {
   // Example request body:
   // {"id":"abcd","context":{"date":"2016-05-21","author":"john"},"content":"= Titel"}
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<Document> addDocument(@RequestBody Document document) {
+  public ResponseEntity<Document> addDocument(@RequestBody Document document) throws URISyntaxException {
     if (document.getId() == null) {
       document.setId(UUID.randomUUID().toString());
     }
     final Document saved = documentRepository.save(document);
-    return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    URI uri = new URI("/documents/" + saved.getId());
+    return ResponseEntity.created(uri).body(null);
   }
 
 }
