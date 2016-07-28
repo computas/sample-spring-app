@@ -104,6 +104,7 @@
                         <exclude>codestyle.xml</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
+                        <exclude>lastAuthor.txt</exclude>
                     </excludes>
                 </configuration>
                 <executions>
