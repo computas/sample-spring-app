@@ -22,7 +22,9 @@
  */
 package com.example.workshop;
 
+import com.example.workshop.test.IntegrationTestCategory;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -43,8 +45,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = PipelineWorkshopApplication.class)
+@SpringApplicationConfiguration(classes = WorkshopApplication.class)
 @WebIntegrationTest("server.port=0")
+@Category(IntegrationTestCategory.class)
 public class DocumentRestTest {
 
   private RestTemplate restTemplate = new TestRestTemplate();

@@ -10,13 +10,13 @@
     <inceptionYear>2016</inceptionYear>
 
     <name>Pipeline Workshop</name>
-    <description>Demo project for Jenkins 2.0 Pipeline Workshop</description>
+    <description>Demo project for CD Jenkins Workshop</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>1.3.7.RELEASE</version>
+        <relativePath/>
     </parent>
 
     <properties>
@@ -81,6 +81,7 @@
                         <pipelineFailOneTest>${pipelineFailOneTest}</pipelineFailOneTest>
                         <buildDirectory>${project.build.directory}</buildDirectory>
                     </systemPropertyVariables>
+                    <groups>${test.groups}</groups>
                 </configuration>
             </plugin>
             <plugin>
@@ -115,5 +116,21 @@
             </plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <id>unitTests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <test.groups>com.example.workshop.test.UnitTestCategory</test.groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>it</id>
+            <properties>
+                <test.groups>com.example.workshop.test.IntegrationTestCategory</test.groups>
+            </properties>
+        </profile>
+    </profiles>
 </project>
