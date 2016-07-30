@@ -22,10 +22,20 @@
  */
 package com.example.workshop;
 
-import com.example.workshop.test.IntegrationTestCategory;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
@@ -35,19 +45,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import com.example.workshop.test.IntegrationTestCategory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = WorkshopApplication.class)
 @WebIntegrationTest("server.port=0")
 @Category(IntegrationTestCategory.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DocumentRestTest {
 
   private RestTemplate restTemplate = new TestRestTemplate();
@@ -55,16 +59,35 @@ public class DocumentRestTest {
   @Value("${local.server.port}")
   private int port;
 
+  private static String id;
+
+  @BeforeClass
+  public static void createId() {
+    id = UUID.randomUUID().toString();
+  }
+
   @Test
-  public void canPostDocument() {
+  public void canAPostDocument() {
     Document document = new Document();
-    document.setId(UUID.randomUUID().toString());
+    document.setId(id);
     Map<String, String> context = new HashMap<>();
     context.put("author", "John Doe");
     document.setContent("= Title");
-    ResponseEntity<Document> response = restTemplate.postForEntity("http://localhost:" + port + "/documents/", document, Document.class);
+    ResponseEntity<Document> response = restTemplate.postForEntity("http://localhost:" + port + "/documents/",
+                                                                   document,
+                                                                   Document.class);
     assertThat(response.getHeaders().getLocation().toString(), containsString("/documents/" + document.getId()));
     assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
     assertNull(response.getBody());
+  }
+
+  @Test
+  public void canBGetDocument() {
+    ResponseEntity<Document> response = restTemplate.getForEntity("http://localhost:" + port + "/documents/" + id,
+                                                                  Document.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+    assertNotNull(response.getBody());
+    Document document = response.getBody();
+    assertEquals("= Title", document.getContent());
   }
 }
