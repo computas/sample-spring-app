@@ -24,6 +24,7 @@ package com.example.workshop;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,13 @@ public class DocumentController {
         new ResponseEntity<>(found, HttpStatus.OK);
   }
 
+  @RequestMapping(value = "/{id}.html", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+  public ResponseEntity<String> getHtmlDocument(@PathVariable("id") String id) {
+    final Document found = documentRepository.findOne(id);
+    return found == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+        new ResponseEntity<>(toHtml(found), HttpStatus.OK);
+  }
+
   // Example request body:
   // {"id":"abcd","context":{"date":"2016-05-21","author":"john"},"content":"= Titel"}
   @RequestMapping(method = RequestMethod.POST)
@@ -61,4 +69,7 @@ public class DocumentController {
     return ResponseEntity.created(uri).body(null);
   }
 
+  private String toHtml(final Document document) {
+    return "<html><body><pre>\n" + document.getContent() + "\n</pre></body></html>";
+  }
 }

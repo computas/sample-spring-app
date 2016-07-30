@@ -41,6 +41,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
@@ -89,5 +90,17 @@ public class DocumentRestTest {
     assertNotNull(response.getBody());
     Document document = response.getBody();
     assertEquals("= Title", document.getContent());
+  }
+
+  @Test
+  public void canCGetHtmlDocument() {
+    ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/documents/" + id + ".html",
+                                                                String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+    assertTrue("Media type should be compatible with " + MediaType.TEXT_HTML_VALUE,
+               response.getHeaders().getContentType().isCompatibleWith(MediaType.TEXT_HTML));
+    String body = response.getBody();
+    assertNotNull(body);
+    assertTrue("Response body should contain <html>, but is '" + body + "'", body.contains("<html>"));
   }
 }
