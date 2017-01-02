@@ -22,21 +22,27 @@
  */
 package com.example.workshop;
 
+import static org.asciidoctor.Asciidoctor.Factory.create;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.UUID;
+
+import org.asciidoctor.Asciidoctor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/documents")
 public class DocumentController {
 
   private DocumentRepository documentRepository;
+
+  private final Asciidoctor asciidoctor = create();
 
   @Autowired
   public DocumentController(DocumentRepository documentRepository) {
@@ -46,15 +52,14 @@ public class DocumentController {
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
   public ResponseEntity<Document> getDocument(@PathVariable("id") String id) {
     final Document found = documentRepository.findOne(id);
-    return found == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
-        new ResponseEntity<>(found, HttpStatus.OK);
+    return found == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(found, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/{id}.html", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
   public ResponseEntity<String> getHtmlDocument(@PathVariable("id") String id) {
     final Document found = documentRepository.findOne(id);
-    return found == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
-        new ResponseEntity<>(toHtml(found), HttpStatus.OK);
+    return found == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : new ResponseEntity<>(toHtml(found), HttpStatus.OK);
   }
 
   // Example request body:
@@ -70,6 +75,6 @@ public class DocumentController {
   }
 
   private String toHtml(final Document document) {
-    return "<html><body><pre>\n" + document.getContent() + "\n</pre></body></html>";
+    return asciidoctor.convert("= Title\na name\n\n== A subtitle\n\nWriting AsciiDoc is _easy_!", new HashMap<>());
   }
 }

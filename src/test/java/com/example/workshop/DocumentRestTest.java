@@ -102,5 +102,6 @@ public class DocumentRestTest {
     String body = response.getBody();
     assertNotNull(body);
     assertTrue("Response body should contain <html>, but is '" + body + "'", body.contains("<html>"));
+    System.err.println(body);
   }
 }
