@@ -62,6 +62,14 @@ public class DocumentRestTest {
     Map<String, String> context = new HashMap<>();
     context.put("author", "John Doe");
     document.setContent("= Title");
+    document.setContext(context);
+    /*
+    Sample POST request body:
+      { "id":"1",
+        "content": "= Title",
+        "context": { "author": "John Doe"}
+      }
+     */
     ResponseEntity<Document> response = restTemplate.postForEntity("http://localhost:" + port + "/documents/", document, Document.class);
     assertThat(response.getHeaders().getLocation().toString(), containsString("/documents/" + document.getId()));
     assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
